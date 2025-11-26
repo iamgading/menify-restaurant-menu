@@ -39,11 +39,20 @@ export async function updateSession(request: NextRequest) {
 
   // Protected routes logic
   if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   if (request.nextUrl.pathname.startsWith('/onboarding') && !user) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+  // Redirect logged-in users away from auth pages
+  if (request.nextUrl.pathname.startsWith('/login') && user) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  if (request.nextUrl.pathname.startsWith('/signup') && user) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   if (request.nextUrl.pathname.startsWith('/auth') && user) {

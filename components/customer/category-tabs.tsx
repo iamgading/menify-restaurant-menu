@@ -51,10 +51,10 @@ export function CategoryTabs({
   }, [activeCategory])
 
   return (
-    <div className="bg-background border-b">
+    <div className="w-full">
       <div
         ref={tabsRef}
-        className="flex gap-3 overflow-x-auto scrollbar-hide px-4 py-5 container max-w-4xl mx-auto"
+        className="flex gap-2 overflow-x-auto scrollbar-hide px-4 py-3 container max-w-4xl mx-auto"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {categories.map((category) => {
@@ -65,16 +65,15 @@ export function CategoryTabs({
               data-category-id={category.id}
               onClick={() => onCategoryClick(category.id)}
               className={cn(
-                'group flex items-center gap-2.5 px-6 py-3.5 rounded-2xl font-bold text-sm whitespace-nowrap transition-all duration-500 flex-shrink-0 shadow-md',
-                'hover:scale-105 hover:shadow-lg',
+                'group flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-all duration-300 flex-shrink-0',
                 isActive
-                  ? 'text-white shadow-xl scale-105'
-                  : 'bg-white text-foreground hover:bg-white/90 border-2 border-border hover:border-primary/40'
+                  ? 'text-white shadow-lg scale-105 ring-2 ring-primary/20'
+                  : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-700 border border-stone-200 dark:border-stone-700 hover:border-primary/30 shadow-sm'
               )}
               style={isActive ? {background: 'var(--gradient-primary)'} : {}}
             >
               <span className={cn(
-                'text-2xl transition-transform duration-500',
+                'text-lg transition-transform duration-300',
                 isActive ? 'scale-110' : 'group-hover:scale-110'
               )}>
                 {getCategoryIcon(category.name)}

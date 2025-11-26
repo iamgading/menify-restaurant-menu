@@ -9,6 +9,41 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      users: {
+        Row: {
+          id: string
+          email: string
+          full_name: string | null
+          phone: string | null
+          avatar_url: string | null
+          role: string
+          email_verified: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          email: string
+          full_name?: string | null
+          phone?: string | null
+          avatar_url?: string | null
+          role?: string
+          email_verified?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          full_name?: string | null
+          phone?: string | null
+          avatar_url?: string | null
+          role?: string
+          email_verified?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
       restaurants: {
         Row: {
           id: string
@@ -23,6 +58,16 @@ export interface Database {
           is_active: boolean
           created_at: string
           updated_at: string
+          subscription_tier: string
+          subscription_status: string
+          subscription_start_date: string | null
+          subscription_end_date: string | null
+          trial_ends_at: string | null
+          custom_domain: string | null
+          remove_branding: boolean
+          analytics_enabled: boolean
+          menu_item_limit: number
+          category_limit: number
         }
         Insert: {
           id?: string
@@ -37,6 +82,16 @@ export interface Database {
           is_active?: boolean
           created_at?: string
           updated_at?: string
+          subscription_tier?: string
+          subscription_status?: string
+          subscription_start_date?: string | null
+          subscription_end_date?: string | null
+          trial_ends_at?: string | null
+          custom_domain?: string | null
+          remove_branding?: boolean
+          analytics_enabled?: boolean
+          menu_item_limit?: number
+          category_limit?: number
         }
         Update: {
           id?: string
@@ -51,6 +106,16 @@ export interface Database {
           is_active?: boolean
           created_at?: string
           updated_at?: string
+          subscription_tier?: string
+          subscription_status?: string
+          subscription_start_date?: string | null
+          subscription_end_date?: string | null
+          trial_ends_at?: string | null
+          custom_domain?: string | null
+          remove_branding?: boolean
+          analytics_enabled?: boolean
+          menu_item_limit?: number
+          category_limit?: number
         }
       }
       categories: {
@@ -130,6 +195,7 @@ export interface Database {
   }
 }
 
+export type User = Database['public']['Tables']['users']['Row']
 export type Restaurant = Database['public']['Tables']['restaurants']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']
 export type MenuItem = Database['public']['Tables']['menu_items']['Row']

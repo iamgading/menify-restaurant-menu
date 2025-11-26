@@ -91,30 +91,30 @@ export default function SignUpPage() {
       <div className="min-h-screen pt-16 flex items-center justify-center bg-gradient-to-b from-orange-50/30 to-transparent dark:from-orange-950/10">
         <div className="container max-w-md mx-auto px-4 py-16">
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tighter mb-4 text-foreground">
+            <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tighter mb-4 text-stone-900 dark:text-white">
               Start Free Today
             </h1>
-            <p className="text-stone-600 dark:text-stone-400">
+            <p className="text-stone-600 dark:text-stone-300">
               Create your account in 30 seconds
             </p>
           </div>
 
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-amber-500 rounded-3xl blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-            <div className="relative p-8 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-700 shadow-xl">
+            <div className="relative p-8 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-800 shadow-xl">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-foreground mb-2">
+                  <label className="block text-sm font-semibold text-stone-900 dark:text-white mb-2">
                     Full Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400 dark:text-stone-500" />
                     <input
                       type="text"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-foreground focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
+                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
                       placeholder="John Doe"
                       disabled={isLoading}
                     />
@@ -122,17 +122,17 @@ export default function SignUpPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-foreground mb-2">
+                  <label className="block text-sm font-semibold text-stone-900 dark:text-white mb-2">
                     Restaurant Name
                   </label>
                   <div className="relative">
-                    <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+                    <Store className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400 dark:text-stone-500" />
                     <input
                       type="text"
                       required
                       value={formData.restaurantName}
                       onChange={(e) => setFormData({ ...formData, restaurantName: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-foreground focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
+                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
                       placeholder="My Restaurant"
                       disabled={isLoading}
                     />
@@ -140,17 +140,17 @@ export default function SignUpPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-foreground mb-2">
+                  <label className="block text-sm font-semibold text-stone-900 dark:text-white mb-2">
                     Email
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400 dark:text-stone-500" />
                     <input
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-foreground focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
+                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
                       placeholder="you@example.com"
                       disabled={isLoading}
                     />
@@ -158,17 +158,17 @@ export default function SignUpPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-foreground mb-2">
+                  <label className="block text-sm font-semibold text-stone-900 dark:text-white mb-2">
                     Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400 dark:text-stone-500" />
                     <input
                       type="password"
                       required
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-foreground focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
+                      className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-white placeholder:text-stone-400 dark:placeholder:text-stone-500 focus:border-orange-500 dark:focus:border-orange-500 focus:outline-none transition-colors"
                       placeholder="••••••••"
                       disabled={isLoading}
                     />
@@ -178,7 +178,7 @@ export default function SignUpPage() {
                   </p>
                 </div>
 
-                <div className="text-xs text-stone-600 dark:text-stone-400">
+                <div className="text-xs text-stone-600 dark:text-stone-300">
                   By signing up, you agree to our{' '}
                   <Link href="/terms" className="text-orange-600 dark:text-orange-400 hover:underline">
                     Terms of Service
@@ -203,7 +203,7 @@ export default function SignUpPage() {
                 </Button>
               </form>
 
-              <div className="mt-6 text-center text-sm text-stone-600 dark:text-stone-400">
+              <div className="mt-6 text-center text-sm text-stone-600 dark:text-stone-300">
                 Already have an account?{' '}
                 <Link href="/login" className="text-orange-600 dark:text-orange-400 hover:underline font-semibold">
                   Login here

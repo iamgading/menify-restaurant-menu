@@ -70,7 +70,10 @@ export function MenuPageClient({ restaurant, categories }: MenuPageClientProps) 
     : null
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-stone-50/50 dark:bg-stone-950 relative">
+      {/* Background Pattern */}
+      <div className="fixed inset-0 bg-grid-small-black/[0.05] dark:bg-grid-small-white/[0.05] pointer-events-none" />
+      
       {/* Header */}
       <header className="relative overflow-hidden" style={{background: 'var(--gradient-hero)'}}>
         {/* Pattern Overlay */}
@@ -120,20 +123,22 @@ export function MenuPageClient({ restaurant, categories }: MenuPageClientProps) 
       </header>
 
       {/* Search */}
-      <div className="bg-background border-b">
+      <div className="bg-background/60 backdrop-blur-sm border-b">
         <div className="container max-w-4xl mx-auto px-4 py-4">
           <MenuSearch onSearch={setSearchQuery} />
         </div>
       </div>
 
-      {/* Category Tabs */}
-      {!searchQuery && filteredCategories.length > 0 && (
-        <CategoryTabs
-          categories={filteredCategories}
-          activeCategory={activeCategory}
-          onCategoryClick={handleCategoryClick}
-        />
-      )}
+      {/* Category Tabs - Sticky */}
+      <div className="sticky top-0 z-40 bg-white/80 dark:bg-stone-900/80 backdrop-blur-lg border-b border-stone-200/50 dark:border-stone-800/50 shadow-sm transition-all duration-300 supports-[backdrop-filter]:bg-white/60">
+        {!searchQuery && filteredCategories.length > 0 && (
+          <CategoryTabs
+            categories={filteredCategories}
+            activeCategory={activeCategory}
+            onCategoryClick={handleCategoryClick}
+          />
+        )}
+      </div>
 
       {/* Menu Items */}
       <main className="container max-w-4xl mx-auto px-4 py-6">

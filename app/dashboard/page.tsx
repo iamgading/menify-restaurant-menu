@@ -10,29 +10,119 @@ import {
   Plus, 
   QrCode, 
   ExternalLink,
-  ArrowUpRight,
   Sparkles,
   TrendingUp,
   Clock,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Zap,
+  Crown
 } from "lucide-react"
+import { RestaurantInfoCard } from "./components/restaurant-info-card"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) return null
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950">
+        <Card className="max-w-md w-full border-none shadow-2xl bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl font-bold bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+              Session Expired
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-center text-muted-foreground">
+              Please login again to access your dashboard.
+            </p>
+            <Link href="/login" className="block">
+              <Button className="w-full rounded-xl h-12 font-semibold text-lg shadow-lg shadow-orange-500/20 active:scale-95 transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white border-0">
+                Go to Login
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
-  const { data: restaurant } = await supabase
+  const { data: restaurant, error: restaurantError } = await supabase
     .from('restaurants')
     .select('*')
     .eq('owner_id', user.id)
     .single()
 
-  if (!restaurant) return null
+  // Debug logging
+  console.log('=== RESTAURANT QUERY DEBUG ===')
+  console.log('User ID:', user.id)
+  console.log('User Email:', user.email)
+  console.log('Restaurant Data:', restaurant)
+  console.log('Restaurant Error:', restaurantError)
+  console.log('===============================')
 
-  // Fetch counts
+  if (!restaurant) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950 p-4">
+        <div className="max-w-2xl w-full">
+          <div className="bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-2xl p-8">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-stone-900 dark:text-white mb-2">Setup Diperlukan</h2>
+              <p className="text-stone-600 dark:text-stone-400">Restaurant Anda belum di-setup. Ikuti langkah berikut:</p>
+            </div>
+            
+            <div className="bg-white dark:bg-stone-900 rounded-xl p-6 space-y-4">
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-6 h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                <div>
+                  <p className="font-semibold text-stone-900 dark:text-white">Buka Supabase Dashboard</p>
+                  <p className="text-sm text-stone-600 dark:text-stone-400">Login ke dashboard.supabase.com</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-6 h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                <div>
+                  <p className="font-semibold text-stone-900 dark:text-white">Buka SQL Editor</p>
+                  <p className="text-sm text-stone-600 dark:text-stone-400">Klik "SQL Editor" di sidebar kiri</p>
+                </div>
+              </div>
+              
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-6 h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                <div>
+                  <p className="font-semibold text-stone-900 dark:text-white">Jalankan Script</p>
+                  <p className="text-sm text-stone-600 dark:text-stone-400 mb-2">Copy script dari file <code className="bg-stone-100 dark:bg-stone-800 px-2 py-1 rounded">SIMPLE_FIX.sql</code></p>
+                  <p className="text-sm text-stone-600 dark:text-stone-400">Ganti email dengan: <code className="bg-stone-100 dark:bg-stone-800 px-2 py-1 rounded">{user.email}</code></p>
+                </div>
+              </div>
+              
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-6 h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                <div>
+                  <p className="font-semibold text-stone-900 dark:text-white">Refresh Halaman</p>
+                  <p className="text-sm text-stone-600 dark:text-stone-400">Setelah script berhasil, refresh halaman ini</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <p className="text-sm text-blue-900 dark:text-blue-200">
+                <strong>💡 Tips:</strong> Script ini hanya perlu dijalankan sekali. Setelah itu semua fitur akan berfungsi normal.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const { count: itemCount } = await supabase
     .from('menu_items')
     .select('*', { count: 'exact', head: true })
@@ -43,325 +133,221 @@ export default async function DashboardPage() {
     .select('*', { count: 'exact', head: true })
     .eq('restaurant_id', restaurant.id)
 
+  // Get available items count
   const { count: availableCount } = await supabase
     .from('menu_items')
     .select('*', { count: 'exact', head: true })
     .eq('restaurant_id', restaurant.id)
     .eq('is_available', true)
 
+  // Get unavailable items count
   const { count: unavailableCount } = await supabase
     .from('menu_items')
     .select('*', { count: 'exact', head: true })
     .eq('restaurant_id', restaurant.id)
     .eq('is_available', false)
 
-  // Get recent menu items
-  const { data: recentItems } = await supabase
-    .from('menu_items')
-    .select('name, price, created_at, is_available')
-    .eq('restaurant_id', restaurant.id)
-    .order('created_at', { ascending: false })
-    .limit(5)
-
-  // Mock views for now (will implement analytics later)
-  const viewsCount = Math.floor(Math.random() * 500) + 100
-  const viewsGrowth = Math.floor(Math.random() * 30) + 5
-
-  const usagePercentage = restaurant.subscription_tier === 'free' 
-    ? Math.round((itemCount || 0) / restaurant.menu_item_limit * 100)
-    : 0
+  // Determine Plan (Mock logic for now, replace with actual DB field if available)
+  const isPro = restaurant.subscription_tier === 'pro';
+  const planName = isPro ? 'Pro Plan' : 'Free Plan';
 
   return (
-    <div className="space-y-8 fade-in">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-bold gradient-text">Dashboard</h1>
-          <p className="text-muted-foreground mt-2">
-            Selamat datang kembali, <span className="font-semibold text-foreground">{user.user_metadata.full_name || 'Owner'}</span>! 👋
+    <div className="space-y-8 p-8 min-h-screen bg-stone-50/50 dark:bg-stone-950/50">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-700">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <h1 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white">
+              Dashboard
+            </h1>
+            <Badge 
+              variant="outline" 
+              className={`px-3 py-1 rounded-full border-2 font-bold ${
+                isPro 
+                  ? 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 border-amber-200' 
+                  : 'bg-stone-100 text-stone-600 border-stone-200'
+              }`}
+            >
+              {isPro ? <Crown className="w-3 h-3 mr-1 fill-amber-500 text-amber-600" /> : null}
+              {planName}
+            </Badge>
+          </div>
+          <p className="text-muted-foreground text-lg">
+            Welcome back, <span className="font-semibold text-stone-900 dark:text-stone-100">{user.user_metadata.full_name || 'Owner'}</span>! 👋
           </p>
         </div>
+
         <div className="flex items-center gap-3">
           <Link href={`/r/${restaurant.slug}`} target="_blank">
-            <Button variant="outline" className="gap-2 transition-smooth hover:scale-105">
-              <ExternalLink className="w-4 h-4" />
-              Lihat Menu Live
+            <Button variant="outline" className="rounded-xl h-11 px-5 border-2 hover:bg-stone-100 dark:hover:bg-stone-800 active:scale-95 transition-all duration-200">
+              <ExternalLink className="w-4 h-4 mr-2" />
+              View Live Menu
             </Button>
           </Link>
           <Link href="/dashboard/menu/new">
-            <Button className="gap-2 btn-magnetic pulse-glow" style={{background: 'var(--gradient-primary)'}}>
-              <Plus className="w-4 h-4" />
-              Tambah Menu
+            <Button className="rounded-xl h-11 px-6 font-semibold shadow-lg shadow-orange-500/20 active:scale-95 transition-all duration-200 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white border-0">
+              <Plus className="w-5 h-5 mr-2" />
+              Add Menu
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* Subscription Banner (if Free) */}
-      {restaurant.subscription_tier === 'free' && (
-        <div className="glass rounded-2xl p-6 border-2 border-primary/20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-accent/5 to-warning/5 pattern-dots"></div>
-          <div className="relative flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="p-4 bg-gradient-to-br from-primary to-accent rounded-2xl shadow-lg float">
-                <Sparkles className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h3 className="font-bold text-xl mb-1">🚀 Upgrade ke Pro untuk Fitur Lebih Lengkap!</h3>
-                <p className="text-muted-foreground">
-                  Dapatkan unlimited menu, custom branding, analytics lengkap, dan prioritas support.
-                </p>
-                <div className="mt-2 flex items-center gap-2">
-                  <Badge variant="secondary" className="badge-glow">
-                    {itemCount}/{restaurant.menu_item_limit} Menu Used ({usagePercentage}%)
-                  </Badge>
-                </div>
-              </div>
-            </div>
-            <Link href="/pricing">
-              <Button size="lg" className="whitespace-nowrap btn-magnetic" style={{background: 'var(--gradient-primary)'}}>
-                Upgrade Sekarang - Rp 49k/bulan
-                <ArrowUpRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      )}
-
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="card-hover glass border-primary/20">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+        <Card className="border-none shadow-xl bg-white/60 dark:bg-stone-900/60 backdrop-blur-xl hover:bg-white/80 transition-colors duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Menu</CardTitle>
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Utensils className="h-5 w-5 text-primary" />
+            <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-orange-600 transition-colors">Total Menu</CardTitle>
+            <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-900/30 group-hover:scale-110 transition-transform duration-300">
+              <Utensils className="h-5 w-5 text-orange-600 dark:text-orange-400" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold gradient-text">{itemCount || 0}</div>
-            <p className="text-xs text-muted-foreground mt-2">
-              {restaurant.subscription_tier === 'free' 
-                ? `${itemCount}/${restaurant.menu_item_limit} items` 
-                : 'Unlimited items'}
+            <div className="text-3xl font-bold text-stone-900 dark:text-white">{itemCount || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
+              Items active
             </p>
-            <div className="mt-3 h-2 bg-muted rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
-                style={{ width: `${restaurant.subscription_tier === 'free' ? usagePercentage : 100}%` }}
-              />
-            </div>
           </CardContent>
         </Card>
 
-        <Card className="card-hover glass border-accent/20">
+        <Card className="border-none shadow-xl bg-white/60 dark:bg-stone-900/60 backdrop-blur-xl hover:bg-white/80 transition-colors duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Kategori</CardTitle>
-            <div className="p-2 bg-accent/10 rounded-lg">
-              <Menu className="h-5 w-5 text-accent" />
+            <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-blue-600 transition-colors">Categories</CardTitle>
+            <div className="p-2 rounded-xl bg-blue-100 dark:bg-blue-900/30 group-hover:scale-110 transition-transform duration-300">
+              <Menu className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-accent">{categoryCount || 0}</div>
-            <p className="text-xs text-muted-foreground mt-2">
+            <div className="text-3xl font-bold text-stone-900 dark:text-white">{categoryCount || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
               Active categories
             </p>
-            <Link href="/dashboard/categories" className="inline-block mt-3">
-              <Button variant="link" size="sm" className="p-0 h-auto text-accent">
-                Kelola Kategori →
-              </Button>
-            </Link>
           </CardContent>
         </Card>
 
-        <Card className="card-hover glass border-success/20">
+        <Card className="border-none shadow-xl bg-white/60 dark:bg-stone-900/60 backdrop-blur-xl hover:bg-white/80 transition-colors duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Menu Tersedia</CardTitle>
-            <div className="p-2 bg-success/10 rounded-lg">
-              <CheckCircle2 className="h-5 w-5 text-success" />
+            <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-green-600 transition-colors">Available</CardTitle>
+            <div className="p-2 rounded-xl bg-green-100 dark:bg-green-900/30 group-hover:scale-110 transition-transform duration-300">
+              <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-success">{availableCount || 0}</div>
-            <p className="text-xs text-muted-foreground mt-2">
-              Stok ready
+            <div className="text-3xl font-bold text-stone-900 dark:text-white">{availableCount || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
+              Ready to order
             </p>
-            {unavailableCount ? (
-              <Badge variant="destructive" className="mt-3">
-                {unavailableCount} menu habis
-              </Badge>
-            ) : null}
           </CardContent>
         </Card>
 
-        <Card className="card-hover glass border-warning/20">
+        <Card className="border-none shadow-xl bg-white/60 dark:bg-stone-900/60 backdrop-blur-xl hover:bg-white/80 transition-colors duration-300 group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            <div className="p-2 bg-warning/10 rounded-lg">
-              <Eye className="h-5 w-5 text-warning" />
+            <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-red-600 transition-colors">Sold Out</CardTitle>
+            <div className="p-2 rounded-xl bg-red-100 dark:bg-red-900/30 group-hover:scale-110 transition-transform duration-300">
+              <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-warning">{viewsCount}</div>
-            <div className="flex items-center gap-1 mt-2">
-              <TrendingUp className="w-3 h-3 text-success" />
-              <p className="text-xs text-success font-medium">
-                +{viewsGrowth}% dari bulan lalu
-              </p>
-            </div>
-            <Link href="/dashboard/analytics" className="inline-block mt-3">
-              <Button variant="link" size="sm" className="p-0 h-auto text-warning">
-                Lihat Analytics →
-              </Button>
-            </Link>
+            <div className="text-3xl font-bold text-stone-900 dark:text-white">{unavailableCount || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
+              Out of stock
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-none shadow-xl bg-gradient-to-br from-stone-900 to-stone-800 text-white group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Sparkles className="w-24 h-24" />
+          </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-medium text-stone-300">Plan Status</CardTitle>
+            {isPro ? (
+               <Crown className="h-5 w-5 text-amber-400" />
+            ) : (
+               <Zap className="h-5 w-5 text-stone-400" />
+            )}
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="text-2xl font-bold mb-1">{planName}</div>
+            {isPro ? (
+              <p className="text-xs text-amber-300 font-medium">Premium features active</p>
+            ) : (
+              <Link href="/pricing" className="text-xs text-orange-300 hover:text-orange-200 underline font-medium">
+                Upgrade to Pro &rarr;
+              </Link>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Quick Actions */}
-        <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold mb-4">⚡ Aksi Cepat</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link href="/dashboard/menu/new">
-              <Card className="card-hover cursor-pointer h-full border-2 border-dashed border-primary/30 hover:border-primary">
-                <CardContent className="p-6 flex flex-col items-center text-center gap-3">
-                  <div className="p-4 bg-gradient-to-br from-primary to-accent rounded-2xl text-white shadow-lg">
-                    <Plus className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-semibold">Tambah Menu</h3>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link href="/dashboard/menu">
-              <Card className="card-hover cursor-pointer h-full hover:border-accent/50">
-                <CardContent className="p-6 flex flex-col items-center text-center gap-3">
-                  <div className="p-4 bg-accent/10 rounded-2xl text-accent">
-                    <Utensils className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-semibold">Kelola Menu</h3>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link href="/dashboard/qr-code">
-              <Card className="card-hover cursor-pointer h-full hover:border-success/50">
-                <CardContent className="p-6 flex flex-col items-center text-center gap-3">
-                  <div className="p-4 bg-success/10 rounded-2xl text-success">
-                    <QrCode className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-semibold">Download QR</h3>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link href="/dashboard/settings">
-              <Card className="card-hover cursor-pointer h-full hover:border-warning/50">
-                <CardContent className="p-6 flex flex-col items-center text-center gap-3">
-                  <div className="p-4 bg-warning/10 rounded-2xl text-warning">
-                    <Sparkles className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-semibold">Settings</h3>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div>
-          <h2 className="text-2xl font-bold mb-4">🕐 Menu Terbaru</h2>
-          <Card className="glass">
-            <CardContent className="p-4 space-y-3">
-              {recentItems && recentItems.length > 0 ? (
-                recentItems.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{item.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Rp {item.price.toLocaleString('id-ID')}
-                      </p>
-                    </div>
-                    <div className="ml-2">
-                      {item.is_available ? (
-                        <Badge variant="outline" className="bg-success/10 text-success border-success/20">
-                          <CheckCircle2 className="w-3 h-3 mr-1" />
-                          Ready
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20">
-                          <XCircle className="w-3 h-3 mr-1" />
-                          Habis
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p className="text-sm">Belum ada menu</p>
-                  <Link href="/dashboard/menu/new">
-                    <Button variant="link" size="sm" className="mt-2">
-                      Tambah menu pertama →
-                    </Button>
-                  </Link>
+      {/* Quick Actions */}
+      <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+        <h2 className="text-2xl font-bold mb-6 text-stone-900 dark:text-white flex items-center gap-2">
+          <Zap className="w-6 h-6 text-amber-500 fill-amber-500" />
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Link href="/dashboard/menu/new">
+            <Card className="cursor-pointer border-none shadow-lg bg-white dark:bg-stone-900 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-all duration-300 hover:-translate-y-1 group h-full">
+              <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+                <div className="p-4 bg-orange-100 dark:bg-orange-900/30 rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                  <Plus className="w-8 h-8 text-orange-600 dark:text-orange-400" />
                 </div>
-              )}
-            </CardContent>
-          </Card>
+                <div>
+                  <h3 className="font-bold text-stone-900 dark:text-white">Add Menu</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Create new item</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/dashboard/menu">
+            <Card className="cursor-pointer border-none shadow-lg bg-white dark:bg-stone-900 hover:bg-blue-50 dark:hover:bg-blue-950/20 transition-all duration-300 hover:-translate-y-1 group h-full">
+              <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+                <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                  <Utensils className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-stone-900 dark:text-white">Manage Menu</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Edit existing items</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/dashboard/qr-code">
+            <Card className="cursor-pointer border-none shadow-lg bg-white dark:bg-stone-900 hover:bg-green-50 dark:hover:bg-green-950/20 transition-all duration-300 hover:-translate-y-1 group h-full">
+              <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+                <div className="p-4 bg-green-100 dark:bg-green-900/30 rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                  <QrCode className="w-8 h-8 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-stone-900 dark:text-white">QR Code</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Download & Print</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/dashboard/settings">
+            <Card className="cursor-pointer border-none shadow-lg bg-white dark:bg-stone-900 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all duration-300 hover:-translate-y-1 group h-full">
+              <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+                <div className="p-4 bg-purple-100 dark:bg-purple-900/30 rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                  <Sparkles className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-stone-900 dark:text-white">Settings</h3>
+                  <p className="text-xs text-muted-foreground mt-1">Customize shop</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
 
-      {/* Restaurant Info Card */}
-      <Card className="glass border-2 border-primary/10">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Utensils className="w-5 h-5 text-primary" />
-            </div>
-            Info Restoran
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-bold text-2xl mb-2">{restaurant.name}</h3>
-              <p className="text-muted-foreground mb-4">{restaurant.tagline}</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary">
-                    {restaurant.subscription_tier === 'free' ? '🆓 Free Plan' : '⭐ Pro Plan'}
-                  </Badge>
-                </div>
-                <p><span className="font-medium">WhatsApp:</span> {restaurant.whatsapp_number}</p>
-                <p><span className="font-medium">Slug:</span> /r/{restaurant.slug}</p>
-              </div>
-            </div>
-            <div className="flex flex-col justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground mb-2">Link Menu Publik:</p>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 px-3 py-2 bg-muted rounded-lg text-sm truncate">
-                    {typeof window !== 'undefined' ? window.location.origin : ''}/r/{restaurant.slug}
-                  </code>
-                  <Link href={`/r/${restaurant.slug}`} target="_blank">
-                    <Button size="sm" variant="outline">
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              <Link href="/dashboard/settings" className="mt-4">
-                <Button variant="outline" className="w-full">
-                  Edit Info Restoran
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Restaurant Info */}
+      <RestaurantInfoCard restaurant={restaurant} />
     </div>
   )
 }
+

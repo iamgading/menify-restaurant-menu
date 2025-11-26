@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Check, Zap, Star, Sparkles } from 'lucide-react';
+import { Check, Zap, Star, Sparkles, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const PricingSection = () => {
@@ -70,12 +70,12 @@ export const PricingSection = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           
           {/* Starter Plan */}
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-stone-200 to-stone-300 dark:from-stone-800 dark:to-stone-900 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500" />
-            <div className="relative p-8 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-all duration-500 hover:-translate-y-1 shadow-xl">
+            <div className="relative p-8 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-all duration-500 hover:-translate-y-1 shadow-xl h-full flex flex-col">
               
               <div className="mb-8">
                 <h3 className="text-2xl font-bold text-stone-900 dark:text-white mb-2">Starter</h3>
@@ -94,7 +94,7 @@ export const PricingSection = () => {
                 Mulai Gratis Sekarang
               </Button>
               
-              <div className="space-y-4">
+              <div className="space-y-4 mt-auto">
                 {[
                   "Unlimited Menu Items",
                   "QR Code Generator",
@@ -118,7 +118,7 @@ export const PricingSection = () => {
             {/* Glow Effect - Softer */}
             <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-amber-500 to-orange-600 rounded-3xl blur-2xl opacity-30 group-hover:opacity-60 transition-opacity duration-500 animate-pulse-glow" />
             
-            <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white to-orange-50/50 dark:from-stone-900 dark:to-orange-950/30 border-2 border-orange-400 dark:border-orange-600 hover:border-orange-500 dark:hover:border-orange-500 transition-all duration-500 hover:-translate-y-2 shadow-2xl shadow-orange-500/10">
+            <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white to-orange-50/50 dark:from-stone-900 dark:to-orange-950/30 border-2 border-orange-400 dark:border-orange-600 hover:border-orange-500 dark:hover:border-orange-500 transition-all duration-500 hover:-translate-y-2 shadow-2xl shadow-orange-500/10 h-full flex flex-col">
               
               {/* Popular Badge */}
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2 animate-bounce-slow">
@@ -154,7 +154,7 @@ export const PricingSection = () => {
                 Coba Pro 14 Hari Gratis
               </Button>
               
-              <div className="space-y-4">
+              <div className="space-y-4 mt-auto">
                 {[
                   "Semua fitur Starter",
                   "Custom Domain (nama-resto.com)",
@@ -165,6 +165,54 @@ export const PricingSection = () => {
                 ].map((feature, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center flex-shrink-0 shadow-md">
+                      <Check size={14} className="text-white" strokeWidth={3} />
+                    </div>
+                    <span className="text-stone-800 dark:text-stone-200 font-semibold">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Enterprise Plan */}
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-violet-500 to-purple-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-50 transition-opacity duration-500" />
+            
+            <div className="relative p-8 rounded-3xl bg-gradient-to-br from-white to-purple-50/30 dark:from-stone-900 dark:to-purple-950/20 border-2 border-purple-300 dark:border-purple-700 hover:border-purple-400 dark:hover:border-purple-600 transition-all duration-500 hover:-translate-y-1 shadow-xl h-full flex flex-col">
+              
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-stone-900 dark:text-white mb-2 flex items-center gap-2">
+                  Enterprise
+                  <Sparkles size={22} className="text-purple-500" />
+                </h3>
+                <p className="text-stone-600 dark:text-stone-400">Untuk chain restaurant & franchise.</p>
+              </div>
+              
+              <div className="mb-8">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">Custom</span>
+                </div>
+                <p className="text-sm text-stone-500 dark:text-stone-400 mt-2">Hubungi sales untuk harga khusus</p>
+              </div>
+              
+              <a href="https://wa.me/6289654061718?text=Halo,%20saya%20tertarik%20dengan%20paket%20Enterprise%20Menify" target="_blank" rel="noopener noreferrer" className="block">
+                <Button className="w-full rounded-xl bg-gradient-to-r from-purple-500 via-violet-500 to-purple-600 text-white hover:from-purple-600 hover:via-violet-600 hover:to-purple-700 mb-8 h-12 font-bold shadow-xl shadow-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/75 transition-all duration-300 hover:scale-105 border-0 flex items-center justify-center gap-2">
+                  <MessageCircle className="w-5 h-5" />
+                  Hubungi Sales
+                </Button>
+              </a>
+              
+              <div className="space-y-4 mt-auto">
+                {[
+                  "Semua fitur Pro",
+                  "Unlimited Outlets & Staff",
+                  "White Label Solution",
+                  "Custom Integration & API",
+                  "Dedicated Account Manager",
+                  "SLA 99.9% Uptime"
+                ].map((feature, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-violet-500 flex items-center justify-center flex-shrink-0 shadow-md">
                       <Check size={14} className="text-white" strokeWidth={3} />
                     </div>
                     <span className="text-stone-800 dark:text-stone-200 font-semibold">{feature}</span>

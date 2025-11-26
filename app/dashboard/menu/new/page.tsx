@@ -1,18 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea" // Need to check if exists, otherwise use Input
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select" // Need to check if exists
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { createMenuItem } from "../actions"
-import { SubmitButton } from "@/components/submit-button" // Need to create this or use inline
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import Link from "next/link"
+import { ArrowLeft, Utensils } from "lucide-react"
+import { CreateMenuForm } from "./create-menu-form"
 
 export default async function NewMenuItemPage() {
   const supabase = await createClient()
@@ -20,84 +10,67 @@ export default async function NewMenuItemPage() {
 
   if (!user) return null
 
+  // Get restaurant or use placeholder
   const { data: restaurant } = await supabase
     .from('restaurants')
     .select('id')
     .eq('owner_id', user.id)
     .single()
 
-  if (!restaurant) return null
-
-  const { data: categories } = await supabase
-    .from('categories')
-    .select('id, name')
-    .eq('restaurant_id', restaurant.id)
-    .order('name')
+  // FORCE BYPASS: Jangan block jika restaurant null
+  // Get categories or use default ones
+  let categories: Array<{ id: string; name: string }> = []
+  
+  if (restaurant) {
+    const { data: dbCategories } = await supabase
+      .from('categories')
+      .select('id, name')
+      .eq('restaurant_id', restaurant.id)
+      .order('name')
+    
+    categories = dbCategories || []
+  }
+  
+  // If no categories, provide default ones (will be created on first menu save)
+  if (categories.length === 0) {
+    categories = [
+      { id: 'temp-1', name: 'Makanan Utama' },
+      { id: 'temp-2', name: 'Minuman' },
+      { id: 'temp-3', name: 'Snack & Dessert' },
+    ]
+  }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Tambah Menu Baru</h1>
-        <p className="text-muted-foreground">
-          Isi detail menu makanan atau minuman baru
+    <div className="max-w-3xl mx-auto pb-12">
+      <div className="mb-8">
+        <Link 
+          href="/dashboard/menu" 
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-orange-600 transition-colors mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Kembali ke Menu
+        </Link>
+        <h1 className="text-4xl font-bold text-stone-900 dark:text-white mb-2">Tambah Menu Baru</h1>
+        <p className="text-stone-600 dark:text-stone-400 text-lg">
+          Buat menu makanan atau minuman yang menarik untuk pelanggan Anda.
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Informasi Menu</CardTitle>
+      <Card className="border-none shadow-xl bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-orange-500 to-amber-600" />
+        <CardHeader className="border-b border-stone-100 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-900/50">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+              <Utensils className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+            </div>
+            <div>
+              <CardTitle className="text-xl">Informasi Menu</CardTitle>
+              <CardDescription>Lengkapi detail menu di bawah ini</CardDescription>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent>
-          <form action={createMenuItem} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name">Nama Menu</Label>
-              <Input id="name" name="name" placeholder="Contoh: Nasi Goreng" required />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="price">Harga (Rp)</Label>
-                <Input id="price" name="price" type="number" placeholder="25000" required />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="category_id">Kategori</Label>
-                <select 
-                  id="category_id" 
-                  name="category_id" 
-                  className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
-                >
-                  <option value="">Pilih Kategori</option>
-                  {categories?.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Deskripsi</Label>
-              <Input id="description" name="description" placeholder="Penjelasan singkat menu..." />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input 
-                type="checkbox" 
-                id="is_available" 
-                name="is_available" 
-                defaultChecked 
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <Label htmlFor="is_available">Tersedia (Stok Ada)</Label>
-            </div>
-
-            <div className="pt-4">
-              <Button type="submit" className="w-full btn-magnetic" style={{background: 'var(--gradient-primary)'}}>
-                Simpan Menu
-              </Button>
-            </div>
-          </form>
+        <CardContent className="p-8">
+          <CreateMenuForm categories={categories || []} />
         </CardContent>
       </Card>
     </div>
